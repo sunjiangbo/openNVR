@@ -1,4 +1,4 @@
 openNVR
 =======
 
-an open source NVR project, which focus on ONVIF/PSIA/RTSP IPC 
+an open source NVR project, which focus on ONVIF/PSIA/RTSP IPC management
