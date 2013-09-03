@@ -1,0 +1,70 @@
+Feng - standard compliant streaming server
+
++ What is feng?
+
+Feng is a multimedia streaming server compliant with the IETF's standards for real-time streaming of multimedia content over Internet. Feng implements RTSP ¿ Real-Time Streaming Protocol (rfc2326) and RTP/RTCP ¿ Real-Time Transport Protocol/RTP Control Protocol (rfc3550) supporting the RTP Profile for Audio and Video Conferences with Minimal Control (rfc3551).
+
+Feng supports the following encoding standards:
+
+    * Audio
+          o MPEG Audio (MPEG-1/2 Layer I/II/III) (rfc2250)
+          o Vorbis (draft)
+          o AAC (MPEG-4 Part 3) (rfc3640)
+
+    * Video
+          o MPEG Video (MPEG-1/2) (rfc2250)
+          o MPEG 4 Visual (MPEG-4 Part 2) (rfc3016)
+          o H.264 (MPEG-4 Part 10) (rfc3984)
+          o H.263 / H.263+ (rfc4629)
+          o Theora (draft)
+
+The main characteristics of Feng are the container support, the ability to handle seeking, also used internally for the compositor metademuxer, and the modular structure focused on easing the extension of codec and protocol support.
+
++ Usage
+
+The simplest way to test feng is just adding a resource by putting it in the
+feng root (usually /var/feng/avroot or /srv/feng/avroot/, you can change it in
+the configuration file) and running feng from command line.
+Feng by default will listen for incoming rtsp connection on the
+port 554, serving the content matching the requested resources if available.
+
+$ $EDITOR /etc/feng.conf
+
+$ cp myfile.mov /var/feng/avroot
+
+$ feng &
+
+$ mplayer rtsp://localhost/myfile.mov
+
++ Advanced usage
+
+++ Daemon mode
+
+For a full deployment it's advised to use start-stop-daemon as shown below or
+prepare initscripts for your specific distribution.
+
+# starting the daemon, messages to the system logging facility
+$ start-stop-daemon --start --quiet --background --make-pidfile \
+                    --pidfile /var/run/feng.pid \
+                    --exec /usr/bin/feng -- -s
+
+# stopping the daemon
+$ start-stop-daemon --stop -p /var/run/feng.pid
+
+++ Metademuxer
+Feng container layer provides a powerful infrastructure to enable customized
+stream management. Currently there are two examples provided.
+
++++ ds - compositor metademuxer
+The compositor metademuxer handles lists (see the examples provided in the avroot directory) of coherent resources (same encoding, same resolution, same streams number presents) allowing the creation of resources made out of the files/excerpts aggregation.
+
++++ live/sd
+The sd metademuxer is present as backward compatibility with fenice, it has the very same limitation of fenice's streaming support (lack of seek, requires many informations) and should not be used if possible.
+
+Please refer to the man page for further information.
+
++ Bug reports
+
+Please use our bug tracker accessible at http://bugs.lscube.org using feng as
+the Topic.
+
